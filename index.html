@@ -489,7 +489,7 @@ html, body {
   <p class="id-bio">CS grad building real-time environments, procedural Blender tools & game-ready assets.</p>
 
   <!-- STATUS / CONTACT -->
-  <a href="mailto:contact@colosyn.com" class="status"><span class="sdot"></span>Contact Me</a>
+  <a href="mailto:contact@colosyn.com" class="status" onclick="window.location.href='mailto:contact@colosyn.com'; return false;"><span class="sdot"></span>Contact Me</a>
 
   <!-- SOCIAL -->
   <div class="social-row">
@@ -786,6 +786,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.querySelectorAll('.panel').forEach(p => {
       if (p.id === 'panel-' + t) {
         p.classList.remove('hidden');
+        p.style.animation = 'none'; // cancel CSS fup re-trigger on display change
         p.style.opacity = '0';
         p.style.transform = 'translateY(7px)';
         p.style.transition = 'opacity .25s ease, transform .25s ease';
