@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COLOSYN — Links</title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="Logo.png">
+
+<!-- SEO & Social Sharing (Open Graph) -->
+<meta name="description" content="Game Dev · Tech Art · Environment Art">
+<meta property="og:title" content="COLOSYN — Links">
+<meta property="og:description" content="CS grad building real-time environments, procedural Blender tools & game-ready assets.">
+<meta property="og:image" content="Logo.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FDZGJW346Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-FDZGJW346Q');
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+a { color: inherit; text-decoration: none; }
+
+:root {
+  --gold:      #e8c14a;
+  --gold-soft: rgba(232,193,74,0.15);
+  --gold-glow: rgba(232,193,74,0.07);
+  --green:     #4cff72;
+  --bg:        #060606;
+
+  /* text shades */
+  --w1: #ffffff;
+  --w2: #d8d8d8;   /* secondary — bright */
+  --w3: #888888;
+  --w4: #333333;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--w2);
+  font-family: 'Rajdhani', sans-serif;
+  overflow: hidden;
+}
+@media (max-height: 720px) { html, body { overflow: auto; } }
+
+/* ── BG CANVAS ── */
+#bg-canvas {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+
+
+.wrap {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 440px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 30px 20px 24px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 14px;
+}
+
+/* ── LOGO ── */
+.logo-wrap {
+  position: relative; width: 64px; height: 64px; flex-shrink: 0;
+  opacity: 0; animation: fdn .5s .05s forwards;
+}
+.spin-ring {
+  position: absolute; border-radius: 50%;
+  border: 1px dashed rgba(232,193,74,0.2);
+  animation: spin linear infinite;
+}
+.spin-ring.r1 { inset: -4px;  animation-duration: 14s; }
+.spin-ring.r2 { inset:-10px; animation-duration: 24s; animation-direction: reverse; border-color: rgba(232,193,74,0.08); }
+
+/* Apple glass circle */
+.logo-circle {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255,255,255,0.3);
+  border-left: 1px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.5),
+    0 0 28px rgba(232,193,74,0.07);
+  position: relative; overflow: hidden;
+}
+.logo-circle::before {
+  content: '';
+  position: absolute; top: 0; left: 10%; right: 10%; height: 50%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.14), transparent);
+  border-radius: 50% 50% 0 0 / 60% 60% 0 0;
+  pointer-events: none;
+  z-index: 2;
+}
+.logo-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+}
+.logo-letter {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.65rem; font-weight: 900;
+  color: var(--gold);
+  text-shadow: 0 0 14px rgba(232,193,74,0.7);
+  position: relative; z-index: 1;
+}
+
+/* ── IDENTITY ── */
+.id-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem; font-weight: 900;
+  color: var(--w1); letter-spacing: 0.14em;
+  text-shadow: 0 0 22px rgba(232,193,74,0.14);
+  opacity: 0; animation: fdn .5s .15s forwards;
+}
+.id-name em { color: var(--gold); font-style: normal; }
+
+.id-title {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--w3);
+  opacity: 0; animation: fdn .5s .24s forwards;
+}
+
+.id-bio {
+  font-size: 0.82rem; font-weight: 400;
+  color: var(--w2);
+  line-height: 1.6; text-align: center;
+  max-width: 300px;
+  opacity: 0; animation: fdn .5s .32s forwards;
+}
+
+/* ── STATUS / CONTACT BTN ── */
+.status {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.54rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--green);
+  
+  /* Frosted Glass Base */
+  background: linear-gradient(135deg, rgba(76,255,114,0.1), rgba(76,255,114,0.02));
+  border: 1px solid rgba(76,255,114,0.15);
+  border-top: 1px solid rgba(76,255,114,0.3);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  
+  padding: 6px 14px;
+  border-radius: 20px;
+  opacity: 0; animation: fdn .5s .4s forwards;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.status:hover {
+  background: linear-gradient(135deg, rgba(76,255,114,0.15), rgba(76,255,114,0.05));
+  border-color: rgba(76,255,114,0.4);
+  box-shadow: 0 6px 20px rgba(76,255,114,0.15);
+  transform: translateY(-2px);
+  color: #fff;
+}
+.sdot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--green); box-shadow: 0 0 7px var(--green);
+  animation: blink 1.6s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+/* ── SOCIAL ROW ── */
+.social-row {
+  display: flex; gap: 8px; justify-content: center;
+  opacity: 0; animation: fup .5s .47s forwards;
+}
+.soc {
+  width: 40px; height: 40px; border-radius: 50%;
+  /* Frosted Glass */
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255,255,255,0.3);
+  border-left: 1px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none; color: var(--w3);
+  transition: color .2s, border-color .2s, background .2s, transform .22s, box-shadow .22s;
+  position: relative; overflow: hidden;
+}
+.soc::before {
+  content: '';
+  position: absolute; top: 0; left: 8%; right: 8%; height: 50%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
+  border-radius: 50% 50% 0 0 / 60% 60% 0 0;
+  pointer-events: none;
+}
+.soc svg { width: 15px; height: 15px; fill: currentColor; display: block; position: relative; z-index: 1; }
+.soc:hover {
+  color: var(--gold);
+  border-color: rgba(232,193,74,0.38);
+  background: linear-gradient(135deg, rgba(232,193,74,0.15), rgba(232,193,74,0.05));
+  transform: translateY(-3px) scale(1.05);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.5),
+    0 0 14px rgba(232,193,74,0.15);
+}
+
+/* ── DIVIDER ── */
+.divider {
+  width: 100%; display: flex; align-items: center; gap: 10px;
+  opacity: 0; animation: fup .5s .53s forwards;
+}
+.dl { flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+.ds { font-family: 'Share Tech Mono', monospace; font-size: 0.44rem; color: var(--w4); letter-spacing: .2em; }
+
+/* ── TABS ── */
+.tabs {
+  width: 100%; display: grid; grid-template-columns: 1fr 1fr;
+  border-radius: 8px;
+  
+  /* FROSTED GLASS TWEAKS */
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 100%);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255,255,255,0.25);
+  border-left: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  
+  overflow: hidden;
+  opacity: 0; animation: fup .5s .58s forwards;
+}
+.tab-btn {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--w3); background: transparent; border: none;
+  padding: 12px 0; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: color .22s, background .22s;
+  position: relative;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+.tab-btn:last-child { border-right: none; }
+.tab-btn::after {
+  content: ''; position: absolute; bottom: 0; left: 18%; right: 18%; height: 1.5px;
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(232,193,74,0.6), 0 0 20px rgba(232,193,74,0.2);
+  transform: scaleX(0); transition: transform .28s cubic-bezier(.4,0,.2,1);
+}
+.tab-btn.active { color: var(--gold); background: rgba(232,193,74,0.05); }
+.tab-btn.active::after { transform: scaleX(1); }
+
+/* ── PANELS ── */
+.panel { width: 100%; display: flex; flex-direction: column; gap: 7px;
+  opacity: 0; animation: fup .5s .64s forwards;
+}
+.panel.hidden { display: none; }
+
+/* ── APPLE GLASS LINK CARDS ── */
+.lcard {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 15px;
+  border-radius: 8px;
+  
+  /* FROSTED GLASS TWEAKS */
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.02) 100%);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255,255,255,0.25); /* Sharp edge light */
+  border-left: 1px solid rgba(255,255,255,0.15); /* Soft side light */
+  
+  backdrop-filter: blur(28px) saturate(180%); 
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5); /* Ambient drop shadow */
+    
+  text-decoration: none; color: var(--w2);
+  position: relative; overflow: hidden;
+  transition: border-color .22s, transform .2s, background .22s, box-shadow .22s;
+}
+/* Shimmer sweep */
+.lcard::after {
+  content: '';
+  position: absolute; top: 0; left: -120%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  transition: left .5s ease; pointer-events: none;
+}
+.lcard:hover {
+  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 100%);
+  border-color: rgba(232,193,74,0.36);
+  border-top-color: rgba(232,193,74,0.6);
+  transform: translateX(4px) translateY(-1px);
+  box-shadow:
+    -3px 0 18px rgba(232,193,74,0.15),
+    0 12px 40px rgba(0,0,0,0.6);
+}
+.lcard:hover::after { left: 140%; }
+.lcard:hover .lt { color: var(--w1); }
+.lcard:hover .larrow { transform: translateX(3px); color: var(--w2); }
+
+.lbar {
+  position: absolute; left: 0; top: 16%; bottom: 16%; width: 2px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  border-radius: 0 2px 2px 0;
+  opacity: 0; transition: opacity .22s;
+}
+.lcard:hover .lbar { opacity: 1; }
+
+.licon {
+  width: 36px; height: 36px; border-radius: 9px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 0.9rem;
+  transition: border-color .22s, background .22s;
+  position: relative; z-index: 1;
+  color: var(--w3);
+}
+.licon svg { width: 17px; height: 17px; fill: currentColor; display: block; }
+.lcard:hover .licon {
+  border-color: rgba(232,193,74,.32);
+  background: rgba(232,193,74,.1);
+}
+
+.lbody { flex: 1; min-width: 0; position: relative; z-index: 1; }
+.lt {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.68rem; font-weight: 700;
+  color: var(--w1); letter-spacing: .07em;
+  transition: color .2s; margin-bottom: 1px;
+}
+.ls {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.56rem; color: var(--w2); 
+  letter-spacing: .06em;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.lbadge {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.46rem; letter-spacing: .1em; text-transform: uppercase;
+  padding: 2px 7px; border: 1px solid;
+  background: rgba(0,0,0,.35); flex-shrink: 0;
+  position: relative; z-index: 1;
+  backdrop-filter: blur(8px);
+}
+.bm { color: var(--w2); border-color: rgba(255,255,255,.18); }
+
+.larrow {
+  font-size: .68rem; color: var(--w3); flex-shrink: 0;
+  position: relative; z-index: 1;
+  transition: transform .2s, color .2s;
+}
+
+/* ── CTA DROPDOWN on marketplace cards ── */
+.lcard.has-cta { flex-direction: column; align-items: stretch; cursor: pointer; }
+
+.lcard-header { display: flex; align-items: center; gap: 12px; }
+.lcard-cta {
+  display: flex; flex-direction: column; gap: 8px;
+  position: relative; z-index: 1;
+  max-height: 0; overflow: hidden; opacity: 0;
+  margin-top: 0; padding-top: 0; border-top: none;
+  transition: max-height .4s cubic-bezier(.4,0,.2,1),
+              opacity .25s ease,
+              margin-top .32s ease,
+              padding-top .32s ease;
+}
+.lcard.open .lcard-cta {
+  max-height: 800px; /* Increased to allow many products */
+  opacity: 1;
+  margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.lcaret {
+  font-size: .8rem; color: var(--w3); flex-shrink: 0;
+  position: relative; z-index: 1;
+  display: inline-block;
+  transition: transform .28s cubic-bezier(.4,0,.2,1), color .2s;
+}
+.lcard:hover .lcaret { color: var(--w2); }
+.lcard.open .lcaret  { transform: rotate(90deg); color: var(--gold); }
+
+.store-link {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  height: 30px; padding: 0 10px; flex-shrink: 0;
+  border-radius: 6px;
+  border: 1px solid rgba(232,193,74,0.3);
+  background: rgba(232,193,74,0.07);
+  color: var(--gold);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.52rem; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none;
+  position: relative; z-index: 2;
+  transition: border-color .2s, background .2s, color .2s, box-shadow .2s;
+  white-space: nowrap;
+}
+.store-link:hover {
+  border-color: var(--gold);
+  background: rgba(232,193,74,0.15);
+  color: var(--w1);
+  box-shadow: 0 0 12px rgba(232,193,74,0.2);
+}
+
+.cta-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.06);
+}
+.cta-row:first-child { padding-top: 0; border-top: none; }
+
+.cta-btn {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 5px 12px;
+  border: 1px solid rgba(232,193,74,0.35);
+  color: var(--gold);
+  background: rgba(232,193,74,0.07);
+  backdrop-filter: blur(8px);
+  cursor: pointer; text-decoration: none;
+  transition: background .2s, border-color .2s, color .2s, box-shadow .2s;
+  white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.cta-btn:hover {
+  background: rgba(232,193,74,0.16);
+  border-color: var(--gold);
+  box-shadow: 0 0 12px rgba(232,193,74,0.18);
+  color: var(--w1);
+}
+.cta-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.52rem; color: var(--w2); letter-spacing: 0.08em;
+}
+.hfooter {
+  opacity: 0; animation: fup .5s .78s forwards;
+  text-align: center; margin-top: auto; padding-top: 2px;
+}
+.hfooter p {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.5rem; color: var(--w4); letter-spacing: .12em;
+}
+.hfooter span { color: rgba(232,193,74,.4); }
+
+/* ── KEYFRAMES ── */
+@keyframes fdn { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fup { from{opacity:0;transform:translateY(12px)}  to{opacity:1;transform:translateY(0)} }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(232,193,74,.3); }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="wrap">
+
+  <!-- LOGO -->
+  <div class="logo-wrap">
+    <div class="spin-ring r1"></div>
+    <div class="spin-ring r2"></div>
+    <div class="logo-circle">
+      <img src="Logo.png" alt="Colosyn Logo" onerror="this.src='https://via.placeholder.com/150/060606/e8c14a?text=C'">
+    </div>
+  </div>
+
+  <!-- NAME -->
+  <div class="id-name">COLOS<em>YN</em></div>
+  <div class="id-title">Game Dev &nbsp;·&nbsp; Tech Art &nbsp;·&nbsp; Environment Art</div>
+  <p class="id-bio">CS grad building real-time environments, procedural Blender tools & game-ready assets.</p>
+
+  <!-- STATUS / CONTACT -->
+  <a href="mailto:contact@colosynstudio.com" class="status"><span class="sdot"></span>Contact Me</a>
+
+  <!-- SOCIAL -->
+  <div class="social-row">
+
+    <!-- YouTube -->
+    <a href="https://youtube.com/@colosyn" target="_blank" class="soc" title="YouTube">
+      <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+    </a>
+
+    <!-- Instagram -->
+    <a href="https://instagram.com/colosyn" target="_blank" class="soc" title="Instagram">
+      <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8 0 3.2 0 3.6-.1 4.8-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.9.1-3.2 0-3.6 0-4.8-.1-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12c0-3.2 0-3.6.1-4.8C2.4 3.9 4 2.3 7.2 2.3c1.2-.1 1.6-.1 4.8-.1zm0-2.2C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12c0 3.3 0 3.7.1 4.9.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24c3.3 0 3.7 0 4.9-.1 4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9 0-3.3 0-3.7-.1-4.9-.2-4.4-2.6-6.8-7-7C15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4A6.2 6.2 0 0 0 12 5.8zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z"/></svg>
+    </a>
+
+    <!-- Reddit -->
+    <a href="https://reddit.com/u/colosyn" target="_blank" class="soc" title="Reddit">
+      <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M6.167 8a.83.83 0 0 0-.83.83c0 .459.372.84.83.831a.831.831 0 0 0 0-1.661m1.843 3.647c.315 0 1.403-.038 1.976-.611a.23.23 0 0 0 0-.306.213.213 0 0 0-.306 0c-.353.363-1.126.487-1.67.487-.545 0-1.308-.124-1.671-.487a.213.213 0 0 0-.306 0 .213.213 0 0 0 0 .306c.564.563 1.652.61 1.977.61zm.992-2.807c0 .458.373.83.831.83s.83-.381.83-.83a.831.831 0 0 0-1.66 0z"/><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.828-1.165c-.315 0-.602.124-.812.325-.801-.573-1.9-.945-3.121-.993l.534-2.501 1.738.372a.83.83 0 1 0 .83-.869.83.83 0 0 0-.744.468l-1.938-.41a.2.2 0 0 0-.153.028.2.2 0 0 0-.086.134l-.592 2.788c-1.24.038-2.358.41-3.17.992-.21-.2-.496-.324-.81-.324a1.163 1.163 0 0 0-.478 2.224q-.03.17-.029.353c0 1.795 2.091 3.256 4.669 3.256s4.668-1.451 4.668-3.256c0-.114-.01-.238-.029-.353.401-.181.688-.592.688-1.069 0-.65-.525-1.165-1.165-1.165"/></svg>
+    </a>
+
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/profile.php?id=61585438752265" target="_blank" class="soc" title="Facebook">
+      <svg viewBox="0 0 24 24"><path d="M24 12.1C24 5.4 18.6 0 12 0S0 5.4 0 12.1C0 18.1 4.4 23 10.1 24v-8.4H7.1v-3.5h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9v2.3h3.4l-.5 3.5h-2.8V24C19.6 23 24 18.1 24 12.1z"/></svg>
+    </a>
+
+    <!-- X -->
+    <a href="https://x.com/colosynstudio" target="_blank" class="soc" title="X">
+      <svg viewBox="0 0 24 24"><path d="M18.2 2h3.4l-7.4 8.5L23 22h-6.8l-5.3-7-6.1 7H1.4l7.9-9L1 2h7l4.8 6.4L18.2 2zm-1.2 18h1.9L7.2 4H5.1L17 20z"/></svg>
+    </a>
+
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="divider">
+    <span class="dl"></span><span class="ds">◆</span><span class="dl"></span>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="marketplace">🛒 &nbsp;Marketplace</button>
+    <button class="tab-btn" data-tab="portfolio">🎨 &nbsp;Portfolio</button>
+  </div>
+
+  <!-- MARKETPLACE -->
+  <div class="panel" id="panel-marketplace">
+
+    <!-- GUMROAD CARD -->
+    <div class="lcard has-cta" onclick="toggleCard(this, event)">
+      <div class="lbar"></div>
+      <div class="lcard-header">
+        <div class="licon"><svg viewBox="0 0 24 24"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm.44 17.978h-1.944c-2.788 0-5.04-2.252-5.04-5.04V11.04c0-2.788 2.252-5.04 5.04-5.04h2.531c2.395 0 4.378 1.677 4.882 3.92h-2.395c-.42-1.008-1.427-1.72-2.487-1.72h-2.531c-1.595 0-2.84 1.344-2.84 2.84v1.898c0 1.595 1.245 2.84 2.84 2.84h1.944v-2.1H9.956v-2.2h4.584v6.5z"/></svg></div>
+        <div class="lbody"><div class="lt">GUMROAD</div><div class="ls">colosyn.gumroad.com</div></div>
+        <a href="https://colosyn.gumroad.com" target="_blank" class="store-link" title="Visit Gumroad store">Visit ↗</a>
+        <span class="lcaret">›</span>
+      </div>
+      <div class="lcard-cta">
+        <div class="cta-row">
+          <span class="cta-label">LOD Generator v1 · Free</span>
+          <a href="https://colosyn.gumroad.com/l/Lod_generator" target="_blank" class="cta-btn">Get Free ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPERHIVE CARD -->
+    <div class="lcard has-cta" onclick="toggleCard(this, event)">
+      <div class="lbar"></div>
+      <div class="lcard-header">
+        <div class="licon"><svg viewBox="0 0 24 24"><path d="M12 1 3 6.5v11L12 23l9-5.5v-11L12 1zm0 2.31 6.75 4.12v8.14L12 19.69l-6.75-4.12V7.43L12 3.31z"/><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm0 2a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z"/></svg></div>
+        <div class="lbody"><div class="lt">SUPERHIVE</div><div class="ls">Formerly Blender Market</div></div>
+        <a href="https://superhivemarket.com/colosyn" target="_blank" class="store-link" title="Visit Superhive store">Visit ↗</a>
+        <span class="lcaret">›</span>
+      </div>
+      <div class="lcard-cta">
+        <div class="cta-row">
+          <span class="cta-label">LOD Generator v2 · Pro</span>
+          <a href="https://superhivemarket.com/colosyn" target="_blank" class="cta-btn">View ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAB CARD -->
+    <div class="lcard has-cta" onclick="toggleCard(this, event)">
+      <div class="lbar"></div>
+      <div class="lcard-header">
+        <div class="licon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <div class="lbody"><div class="lt">FAB</div><div class="ls">Unreal Marketplace · Epic</div></div>
+        <a href="https://fab.com/sellers/colosyn" target="_blank" class="store-link" title="Visit Fab store">Visit ↗</a>
+        <span class="lcaret">›</span>
+      </div>
+      <div class="lcard-cta">
+        <div class="cta-row">
+          <span class="cta-label">Browse store</span>
+          <a href="https://fab.com/sellers/colosyn" target="_blank" class="cta-btn">Visit Store ↗</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PORTFOLIO -->
+  <div class="panel hidden" id="panel-portfolio">
+    <a href="https://colosyn.artstation.com" target="_blank" class="lcard">
+      <div class="lbar"></div>
+        <div class="licon"><svg viewBox="0 0 24 24"><path d="M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.164-1.333h-1.336l9.229 15.992 1.173 2.033c.205-.428.37-.874.37-1.342zm-14.104-4.357L6.41 6.856l-7.523 13.035h6.204z"/></svg></div>
+      <div class="lbody"><div class="lt">ARTSTATION</div><div class="ls">Environment Art · Game Art</div></div>
+      <span class="lbadge bm">Primary</span><span class="larrow">→</span>
+    </a>
+    <a href="https://github.com/colosyn" target="_blank" class="lcard">
+      <div class="lbar"></div>
+      <div class="licon"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div>
+      <div class="lbody"><div class="lt">GITHUB</div><div class="ls">Tools · Open Source · Repos</div></div>
+      <span class="larrow">→</span>
+    </a>
+    <a href="https://www.linkedin.com/in/shahnawaz-" target="_blank" class="lcard">
+      <div class="lbar"></div>
+      <div class="licon"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div>
+      <div class="lbody"><div class="lt">LINKEDIN</div><div class="ls">Professional Profile</div></div>
+      <span class="larrow">→</span>
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="hfooter"><p>© 2026 <span>COLOSYN</span> &nbsp;·&nbsp; built with precision</p></div>
+
+</div>
+
+<script>
+// ── BACKGROUND TERMS ──
+const canvas = document.getElementById('bg-canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+
+function resize() { 
+  W = innerWidth; 
+  H = innerHeight; 
+  
+  // High-DPI screen fix for sharp canvas rendering
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = W * dpr; 
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+  
+  initTerms(); 
+}
+
+window.addEventListener('resize', resize);
+
+const TERMS = [
+  'texel density', 'draw call', 'LOD', 'normal map',
+  'ambient occlusion', 'trim sheet', 'nanite', 'albedo',
+  'mip map', 'UV unwrap',
+];
+
+let terms = [];
+function initTerms() {
+  terms = TERMS.map(t => ({
+    text: t,
+    x:    Math.random() * W,
+    y:    Math.random() * H,
+    vx:   (Math.random() - .5) * .18,
+    vy:   (Math.random() - .5) * .14,
+    size: Math.random() * 6 + 12,
+    a:    Math.random() * .10 + .10,
+    va:   (Math.random() - .5) * .0003,
+    gold: Math.random() > .72,
+  }));
+}
+
+function drawTerms() {
+  ctx.clearRect(0, 0, W, H);
+  terms.forEach(t => {
+    t.x += t.vx; t.y += t.vy;
+    if (t.x < -120) t.x = W + 80;
+    if (t.x > W + 120) t.x = -80;
+    if (t.y < -20)  t.y = H + 20;
+    if (t.y > H + 20) t.y = -20;
+    
+    t.a = Math.max(.10, Math.min(.20, t.a + t.va));
+    if (t.a <= .10 || t.a >= .20) t.va *= -1;
+    
+    ctx.font = `${t.size}px 'Share Tech Mono', monospace`;
+    ctx.shadowColor   = t.gold ? `rgba(232,193,74,${t.a * 1.8})` : `rgba(255,255,255,${t.a})`;
+    ctx.shadowBlur    = 18;
+    ctx.fillStyle     = t.gold ? `rgba(232,193,74,${t.a})` : `rgba(255,255,255,${t.a * .75})`;
+    ctx.fillText(t.text, t.x, t.y);
+    ctx.shadowBlur = 0;
+  });
+  requestAnimationFrame(drawTerms);
+}
+
+resize();
+drawTerms();
+
+// ── UV GRID (one) ──
+const uv = { x:0, y:0, w:110, h:88, rot:-0.18, vr:.00030, vx:.05, vy:.035 };
+function initUV() { uv.x = W*.12; uv.y = H*.22; }
+
+function drawUV() {
+  ctx.save();
+  ctx.translate(uv.x, uv.y);
+  ctx.rotate(uv.rot);
+  ctx.strokeStyle = 'rgba(232,193,74,0.18)'; ctx.lineWidth = .8;
+  ctx.strokeRect(-uv.w/2, -uv.h/2, uv.w, uv.h);
+  ctx.lineWidth = .4; ctx.strokeStyle = 'rgba(232,193,74,0.09)';
+  for (let i=1;i<6;i++) { const x=-uv.w/2+i*(uv.w/6); ctx.beginPath(); ctx.moveTo(x,-uv.h/2); ctx.lineTo(x,uv.h/2); ctx.stroke(); }
+  for (let j=1;j<5;j++) { const y=-uv.h/2+j*(uv.h/5); ctx.beginPath(); ctx.moveTo(-uv.w/2,y); ctx.lineTo(uv.w/2,y); ctx.stroke(); }
+  ctx.setLineDash([3,4]); ctx.strokeStyle='rgba(232,193,74,0.13)'; ctx.lineWidth=.4;
+  ctx.beginPath(); ctx.moveTo(-uv.w/2,-uv.h/2); ctx.lineTo(uv.w/2,uv.h/2); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='rgba(232,193,74,0.22)'; ctx.font='7px Share Tech Mono,monospace';
+  ctx.fillText('UV',-uv.w/2+3,-uv.h/2+9);
+  ctx.restore();
+  uv.rot+=uv.vr; uv.x+=uv.vx; uv.y+=uv.vy;
+  if (uv.x<-160) uv.x=W+120; if (uv.x>W+160) uv.x=-120;
+  if (uv.y<-120) uv.y=H+100; if (uv.y>H+120) uv.y=-100;
+}
+
+// ── TOPOLOGY MESH (one) ──
+const topo = { x:0, y:0, vx:.06, vy:-.04, rot:.1, vr:.002 };
+function initTopo() { topo.x=W*.85; topo.y=H*.25; }
+const topoPts = [
+  [0,0],[55,10],[48,55],[20,70],[-20,60],[-48,35],[-50,-10],[-20,-50],[25,-48],[52,-20]
+];
+const topoEdges = [[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,1],[1,9]];
+
+function drawTopo() {
+  ctx.save();
+  ctx.translate(topo.x, topo.y);
+  ctx.rotate(topo.rot);
+  ctx.strokeStyle='rgba(232,193,74,0.18)'; ctx.lineWidth=.6;
+  topoEdges.forEach(([a,b]) => {
+    ctx.beginPath(); ctx.moveTo(topoPts[a][0],topoPts[a][1]); ctx.lineTo(topoPts[b][0],topoPts[b][1]); ctx.stroke();
+  });
+  ctx.fillStyle='rgba(232,193,74,0.35)';
+  topoPts.forEach(([x,y]) => { ctx.beginPath(); ctx.arc(x,y,1.4,0,Math.PI*2); ctx.fill(); });
+  ctx.fillStyle='rgba(232,193,74,0.20)'; ctx.font='7px Share Tech Mono,monospace';
+  ctx.fillText('TOPO',-14,82);
+  ctx.restore();
+  topo.rot+=topo.vr; topo.x+=topo.vx; topo.y+=topo.vy;
+  if (topo.x<-100) topo.x=W+80; if (topo.x>W+100) topo.x=-80;
+  if (topo.y<-100) topo.y=H+80; if (topo.y>H+100) topo.y=-80;
+}
+
+// ── CONTOUR LINES (one) ──
+const contour = { x:0, y:0, vx:-.05, vy:.03, rot:.25, vr:.0018 };
+function initContour() { contour.x=W*.15; contour.y=H*.75; }
+const cShape = [[0,.0],[.25,-.28],[.5,-.38],[.75,-.22],[1,.0],[.85,.28],[.6,.42],[.3,.38],[.05,.2]];
+
+function drawContour() {
+  ctx.save();
+  ctx.translate(contour.x, contour.y);
+  ctx.rotate(contour.rot);
+  const W2=90;
+  for (let lv=0;lv<5;lv++) {
+    const off=lv*13, a=0.18-lv*.025;
+    ctx.beginPath();
+    cShape.forEach(([nx,ny],i) => {
+      const px=(nx-.5)*W2, py=ny*70+off;
+      i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+    });
+    ctx.strokeStyle=`rgba(232,193,74,${a})`; ctx.lineWidth=.7; ctx.stroke();
+  }
+  ctx.fillStyle='rgba(232,193,74,0.20)'; ctx.font='7px Share Tech Mono,monospace';
+  ctx.fillText('CONTOUR',-20,90);
+  ctx.restore();
+  contour.rot+=contour.vr; contour.x+=contour.vx; contour.y+=contour.vy;
+  if (contour.x<-130) contour.x=W+100; if (contour.x>W+130) contour.x=-100;
+  if (contour.y<-120) contour.y=H+100; if (contour.y>H+120) contour.y=-100;
+}
+
+function drawGraphics() {
+  drawUV();
+  drawTopo();
+  drawContour();
+  requestAnimationFrame(drawGraphics);
+}
+
+initUV(); initTopo(); initContour();
+drawGraphics();
+
+// ── CARD TOGGLE ──
+function toggleCard(card, event) {
+  if (event.target.closest('a, .lcard-cta')) return;
+  card.classList.toggle('open');
+}
+
+// ── TABS ──
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const t = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.panel').forEach(p => {
+      if (p.id === 'panel-' + t) {
+        p.classList.remove('hidden');
+        p.style.opacity = '0';
+        p.style.transform = 'translateY(7px)';
+        p.style.transition = 'opacity .25s ease, transform .25s ease';
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          p.style.opacity = '1';
+          p.style.transform = 'translateY(0)';
+        }));
+      } else {
+        p.classList.add('hidden');
+        p.style.transition = '';
+      }
+    });
+  });
+});
+document.getElementById('panel-marketplace').style.opacity = '1';
+</script>
+</body>
+</html>
