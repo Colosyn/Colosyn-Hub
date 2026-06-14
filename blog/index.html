@@ -353,7 +353,7 @@ html, body {
   <!-- POSTS GRID -->
   <div class="posts-grid">
     {% for post in collections.post | reverse %}
-      <a href="{{ post.url }}" class="grid-card" data-category="{{ post.data.category | default('devlogs') | slugify }}">
+      <a href="{{ post.url }}" class="grid-card" data-category="{{ post.data.category | default: 'devlogs' | slugify }}">
         <div class="lbar"></div>
         
         <!-- Post Thumbnail Image -->
