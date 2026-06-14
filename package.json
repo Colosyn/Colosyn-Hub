@@ -1,0 +1,12 @@
+{
+  "name": "colosyn-hub",
+  "version": "1.0.0",
+  "description": "Colosyn Links Hub and Tech Art Blog",
+  "scripts": {
+    "dev": "eleventy --serve",
+    "build": "eleventy"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}

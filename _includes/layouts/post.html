@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ title }} — COLOSYN</title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="/Logo.png">
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Prism Syntax Highlighting -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+a { color: inherit; text-decoration: none; }
+
+:root {
+  --gold:      #e8c14a;
+  --gold-soft: rgba(232,193,74,0.15);
+  --gold-glow: rgba(232,193,74,0.07);
+  --green:     #4cff72;
+  --bg:        #060606;
+
+  /* text shades */
+  --w1: #ffffff;
+  --w2: #d8d8d8;
+  --w3: #888888;
+  --w4: #333333;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--w2);
+  font-family: 'Rajdhani', sans-serif;
+  min-height: 100vh;
+}
+
+/* ── BG CANVAS ── */
+#bg-canvas {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+
+.wrap {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+  display: flex; flex-direction: column;
+  gap: 24px;
+}
+
+/* ── HEADER / BACK BUTTON ── */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 0; animation: fdn .5s .05s forwards;
+}
+
+.back-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--w3);
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.08);
+  border-top: 1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.back-btn:hover {
+  color: var(--gold);
+  border-color: rgba(232,193,74,0.3);
+  background: rgba(232,193,74,0.08);
+  transform: translateX(-3px);
+}
+
+.logo-link {
+  display: flex; align-items: center; gap: 10px;
+}
+.logo-img {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid rgba(232,193,74,0.3);
+}
+.logo-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem; font-weight: 900; letter-spacing: 0.1em;
+  color: var(--w1);
+}
+.logo-text em { color: var(--gold); font-style: normal; }
+
+/* ── ARTICLE CONTAINER ── */
+.article-card {
+  padding: 30px 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.02) 100%);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255,255,255,0.25);
+  border-left: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  opacity: 0; animation: fup .5s .15s forwards;
+}
+
+@media (max-width: 600px) {
+  .article-card {
+    padding: 20px 20px;
+  }
+}
+
+/* ── POST METADATA ── */
+.post-meta {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem; letter-spacing: 0.1em;
+  color: var(--gold);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.post-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem; font-weight: 900;
+  color: var(--w1);
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  margin-bottom: 24px;
+  text-shadow: 0 0 24px rgba(232,193,74,0.1);
+}
+@media (max-width: 600px) {
+  .post-title { font-size: 1.4rem; }
+}
+
+/* ── MARKDOWN TYPOGRAPHY STYLING ── */
+.post-content {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  font-weight: 400;
+  color: var(--w2);
+}
+
+.post-content h1, .post-content h2, .post-content h3, .post-content h4 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--w1);
+  margin-top: 32px;
+  margin-bottom: 14px;
+  letter-spacing: 0.05em;
+}
+.post-content h1 { font-size: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; }
+.post-content h2 { font-size: 1.3rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px;}
+.post-content h3 { font-size: 1.1rem; }
+
+.post-content p {
+  margin-bottom: 18px;
+}
+
+.post-content a {
+  color: var(--gold);
+  border-bottom: 1px dashed var(--gold);
+  transition: all 0.2s ease;
+}
+.post-content a:hover {
+  color: #fff;
+  border-bottom-style: solid;
+  text-shadow: 0 0 8px rgba(232,193,74,0.4);
+}
+
+.post-content ul, .post-content ol {
+  margin-bottom: 18px;
+  padding-left: 20px;
+}
+.post-content li {
+  margin-bottom: 6px;
+}
+
+.post-content blockquote {
+  border-left: 3px solid var(--gold);
+  background: rgba(232,193,74,0.03);
+  padding: 12px 20px;
+  margin: 20px 0;
+  font-style: italic;
+  color: #fff;
+}
+
+/* Images and Gifs inside articles */
+.post-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 28px auto;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+/* Code Syntax & Pre formatting */
+.post-content pre {
+  margin: 24px 0;
+  border-radius: 8px !important;
+  background: rgba(10, 10, 10, 0.7) !important;
+  border: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(10px);
+}
+.post-content code {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.88rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--gold);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.post-content pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+/* ── FOOTER ── */
+.hfooter {
+  opacity: 0; animation: fup .5s .2s forwards;
+  text-align: center; margin-top: 20px;
+}
+.hfooter p {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.55rem; color: var(--w4); letter-spacing: .12em;
+}
+.hfooter span { color: rgba(232,193,74,.4); }
+
+/* ── KEYFRAMES ── */
+@keyframes fdn { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fup { from{opacity:0;transform:translateY(12px)}  to{opacity:1;transform:translateY(0)} }
+
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(232,193,74,.3); }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="wrap">
+
+  <!-- HEADER ROW -->
+  <div class="header-row">
+    <a href="/blog/" class="back-btn">← Back to Blog</a>
+    <a href="/" class="logo-link">
+      <img src="/Logo.png" class="logo-img" alt="Logo">
+      <div class="logo-text">COLOS<em>YN</em></div>
+    </a>
+  </div>
+
+  <!-- ARTICLE CARD -->
+  <article class="article-card">
+    <div class="post-meta">
+      Published: {{ date | date: "%b %d, %Y" }}
+    </div>
+    <h1 class="post-title">{{ title }}</h1>
+    
+    <div class="post-content">
+      {{ content }}
+    </div>
+  </article>
+
+  <!-- FOOTER -->
+  <div class="hfooter"><p>© 2026 <span>COLOSYN</span> &nbsp;·&nbsp; built with precision</p></div>
+
+</div>
+
+<!-- Canvas background terms script (Identical to main hub) -->
+<script>
+const canvas = document.getElementById('bg-canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+
+function resize() { 
+  W = innerWidth; 
+  H = innerHeight; 
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = W * dpr; 
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+  initTerms(); 
+}
+
+window.addEventListener('resize', resize);
+
+const TERMS = [
+  'texel density', 'draw call', 'LOD', 'normal map',
+  'ambient occlusion', 'trim sheet', 'nanite', 'albedo',
+  'mip map', 'UV unwrap',
+];
+
+let terms = [];
+function initTerms() {
+  terms = TERMS.map(t => ({
+    text: t,
+    x:    Math.random() * W,
+    y:    Math.random() * H,
+    vx:   (Math.random() - .5) * .18,
+    vy:   (Math.random() - .5) * .14,
+    size: Math.random() * 6 + 12,
+    a:    Math.random() * .10 + .10,
+    va:   (Math.random() - .5) * .0003,
+    gold: Math.random() > .72,
+  }));
+}
+
+function drawTerms() {
+  ctx.clearRect(0, 0, W, H);
+  terms.forEach(t => {
+    t.x += t.vx; t.y += t.vy;
+    if (t.x < -120) t.x = W + 80;
+    if (t.x > W + 120) t.x = -80;
+    if (t.y < -20)  t.y = H + 20;
+    if (t.y > H + 20) t.y = -20;
+    
+    t.a = Math.max(.10, Math.min(.20, t.a + t.va));
+    if (t.a <= .10 || t.a >= .20) t.va *= -1;
+    
+    ctx.font = `${t.size}px 'Share Tech Mono', monospace`;
+    ctx.shadowColor   = t.gold ? `rgba(232,193,74,${t.a * 1.8})` : `rgba(255,255,255,${t.a})`;
+    ctx.shadowBlur    = 18;
+    ctx.fillStyle     = t.gold ? `rgba(232,193,74,${t.a})` : `rgba(255,255,255,${t.a * .75})`;
+    ctx.fillText(t.text, t.x, t.y);
+    ctx.shadowBlur = 0;
+  });
+  
+  drawGraphics();
+}
+
+// ── UV GRID ──
+const uv = { x:0, y:0, w:110, h:88, rot:-0.18, vr:.00030, vx:.05, vy:.035 };
+function initUV() { uv.x = W*.12; uv.y = H*.22; }
+
+function drawUV() {
+  ctx.save();
+  ctx.translate(uv.x, uv.y);
+  ctx.rotate(uv.rot);
+  ctx.strokeStyle = 'rgba(232,193,74,0.18)'; ctx.lineWidth = .8;
+  ctx.strokeRect(-uv.w/2, -uv.h/2, uv.w, uv.h);
+  ctx.lineWidth = .4; ctx.strokeStyle = 'rgba(232,193,74,0.09)';
+  for (let i=1;i<6;i++) { const x=-uv.w/2+i*(uv.w/6); ctx.beginPath(); ctx.moveTo(x,-uv.h/2); ctx.lineTo(x,uv.h/2); ctx.stroke(); }
+  for (let j=1;j<5;j++) { const y=-uv.h/2+j*(uv.h/5); ctx.beginPath(); ctx.moveTo(-uv.w/2,y); ctx.lineTo(uv.w/2,y); ctx.stroke(); }
+  ctx.setLineDash([3,4]); ctx.strokeStyle='rgba(232,193,74,0.13)'; ctx.lineWidth=.4;
+  ctx.beginPath(); ctx.moveTo(-uv.w/2,-uv.h/2); ctx.lineTo(uv.w/2,uv.h/2); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='rgba(232,193,74,0.22)'; ctx.font='7px Share Tech Mono,monospace';
+  ctx.fillText('UV',-uv.w/2+3,-uv.h/2+9);
+  ctx.restore();
+  uv.rot+=uv.vr; uv.x+=uv.vx; uv.y+=uv.vy;
+  if (uv.x<-160) uv.x=W+120; if (uv.x>W+160) uv.x=-120;
+  if (uv.y<-120) uv.y=H+100; if (uv.y>H+120) uv.y=-100;
+}
+
+// ── TOPOLOGY MESH ──
+const topo = { x:0, y:0, vx:.06, vy:-.04, rot:.1, vr:.002 };
+function initTopo() { topo.x=W*.85; topo.y=H*.25; }
+const topoPts = [
+  [0,0],[55,10],[48,55],[20,70],[-20,60],[-48,35],[-50,-10],[-20,-50],[25,-48],[52,-20]
+];
+const topoEdges = [[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,1],[1,9]];
+
+function drawTopo() {
+  ctx.save();
+  ctx.translate(topo.x, topo.y);
+  ctx.rotate(topo.rot);
+  ctx.strokeStyle='rgba(232,193,74,0.18)'; ctx.lineWidth=.6;
+  topoEdges.forEach(([a,b]) => {
+    ctx.beginPath(); ctx.moveTo(topoPts[a][0],topoPts[a][1]); ctx.lineTo(topoPts[b][0],topoPts[b][1]); ctx.stroke();
+  });
+  ctx.fillStyle='rgba(232,193,74,0.35)';
+  topoPts.forEach(([x,y]) => { ctx.beginPath(); ctx.arc(x,y,1.4,0,Math.PI*2); ctx.fill(); });
+  ctx.fillStyle='rgba(232,193,74,0.20)'; ctx.font='7px Share Tech Mono,monospace';
+  ctx.fillText('TOPO',-14,82);
+  ctx.restore();
+  topo.rot+=topo.vr; topo.x+=topo.vx; topo.y+=topo.vy;
+  if (topo.x<-100) topo.x=W+80; if (topo.x>W+100) topo.x=-80;
+  if (topo.y<-100) topo.y=H+80; if (topo.y>H+100) topo.y=-80;
+}
+
+// ── CONTOUR LINES ──
+const contour = { x:0, y:0, vx:-.05, vy:.03, rot:.25, vr:.0018 };
+function initContour() { contour.x=W*.15; contour.y=H*.75; }
+const cShape = [[0,.0],[.25,-.28],[.5,-.38],[.75,-.22],[1,.0],[.85,.28],[.6,.42],[.3,.38],[.05,.2]];
+
+function drawContour() {
+  ctx.save();
+  ctx.translate(contour.x, contour.y);
+  ctx.rotate(contour.rot);
+  const W2=90;
+  for (let lv=0;lv<5;lv++) {
+    const off=lv*13, a=0.18-lv*.025;
+    ctx.beginPath();
+    cShape.forEach(([nx,ny],i) => {
+      const px=(nx-.5)*W2, py=ny*70+off;
+      i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+    });
+    ctx.strokeStyle=`rgba(232,193,74,${a})`; ctx.lineWidth=.7; ctx.stroke();
+  }
+  ctx.fillStyle='rgba(232,193,74,0.20)'; ctx.font='7px Share Tech Mono,monospace';
+  ctx.fillText('CONTOUR',-20,90);
+  ctx.restore();
+  contour.rot+=contour.vr; contour.x+=contour.vx; contour.y+=contour.vy;
+  if (contour.x<-130) contour.x=W+100; if (contour.x>W+130) contour.x=-100;
+  if (contour.y<-120) contour.y=H+100; if (contour.y>H+120) contour.y=-100;
+}
+
+function drawGraphics() {
+  drawUV();
+  drawTopo();
+  drawContour();
+  requestAnimationFrame(drawTerms);
+}
+
+resize();
+initUV(); initTopo(); initContour();
+drawTerms();
+</script>
+
+<!-- Prism Core & Autoloader for Syntax Highlighting -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+</body>
+</html>

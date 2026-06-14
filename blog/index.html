@@ -1,0 +1,453 @@
+---
+layout: null
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COLOSYN — Blog</title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="/Logo.png">
+
+<!-- SEO & Social Sharing (Open Graph) -->
+<meta name="description" content="Tech Art, Game Dev & Environment Art Blog and Devlogs.">
+<meta property="og:title" content="COLOSYN — Blog">
+<meta property="og:description" content="Procedural tools, real-time environment art breakdowns, and devlogs.">
+<meta property="og:image" content="/Logo.png">
+<meta property="og:type" content="website">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+a { color: inherit; text-decoration: none; }
+
+:root {
+  --gold:      #e8c14a;
+  --gold-soft: rgba(232,193,74,0.15);
+  --gold-glow: rgba(232,193,74,0.07);
+  --green:     #4cff72;
+  --bg:        #060606;
+
+  /* text shades */
+  --w1: #ffffff;
+  --w2: #d8d8d8;
+  --w3: #888888;
+  --w4: #333333;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--w2);
+  font-family: 'Rajdhani', sans-serif;
+  overflow: hidden;
+}
+@media (max-height: 720px) { html, body { overflow: auto; } }
+
+/* ── BG CANVAS ── */
+#bg-canvas {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+
+.wrap {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 440px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 30px 20px 24px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 14px;
+}
+
+/* ── BACK TO HOME BUTTON ── */
+.back-btn-row {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  opacity: 0; animation: fdn .5s .05s forwards;
+}
+.back-home {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--w3);
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.08);
+  border-top: 1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.2s ease;
+}
+.back-home:hover {
+  color: var(--gold);
+  border-color: rgba(232,193,74,0.3);
+  background: rgba(232,193,74,0.08);
+  transform: translateX(-2px);
+}
+
+/* ── LOGO ── */
+.logo-wrap {
+  position: relative; width: 64px; height: 64px; flex-shrink: 0;
+  opacity: 0; animation: fdn .5s .1s forwards;
+}
+.spin-ring {
+  position: absolute; border-radius: 50%;
+  border: 1px dashed rgba(232,193,74,0.2);
+  animation: spin linear infinite;
+}
+.spin-ring.r1 { inset: -4px;  animation-duration: 14s; }
+.spin-ring.r2 { inset:-10px; animation-duration: 24s; animation-direction: reverse; border-color: rgba(232,193,74,0.08); }
+
+.logo-circle {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255,255,255,0.3);
+  border-left: 1px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.5),
+    0 0 28px rgba(232,193,74,0.07);
+}
+.logo-circle img {
+  width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+}
+
+/* ── IDENTITY ── */
+.id-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem; font-weight: 900;
+  color: var(--w1); letter-spacing: 0.14em;
+  text-shadow: 0 0 22px rgba(232,193,74,0.14);
+  opacity: 0; animation: fdn .5s .2s forwards;
+}
+.id-name em { color: var(--gold); font-style: normal; }
+
+.id-title {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--w3);
+  opacity: 0; animation: fdn .5s .28s forwards;
+  margin-bottom: 8px;
+}
+
+/* ── DIVIDER ── */
+.divider {
+  width: 100%; display: flex; align-items: center; gap: 10px;
+  opacity: 0; animation: fup .5s .35s forwards;
+}
+.dl { flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+.ds { font-family: 'Share Tech Mono', monospace; font-size: 0.44rem; color: var(--w4); letter-spacing: .2em; }
+
+/* ── POSTS CONTAINER ── */
+.posts-list {
+  width: 100%; display: flex; flex-direction: column; gap: 8px;
+  opacity: 0; animation: fup .5s .45s forwards;
+  overflow-y: auto; max-height: calc(100vh - 280px);
+  padding-right: 2px;
+}
+.posts-list::-webkit-scrollbar { width: 2px; }
+.posts-list::-webkit-scrollbar-thumb { background: rgba(232,193,74,.3); }
+
+/* ── POST CARDS ── */
+.lcard {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 15px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.02) 100%);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255,255,255,0.25);
+  border-left: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(28px) saturate(180%); 
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  text-decoration: none; color: var(--w2);
+  position: relative; overflow: hidden;
+  transition: border-color .22s, transform .2s, background .22s, box-shadow .22s;
+}
+.lcard::after {
+  content: '';
+  position: absolute; top: 0; left: -120%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  transition: left .5s ease; pointer-events: none;
+}
+.lcard:hover {
+  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 100%);
+  border-color: rgba(232,193,74,0.36);
+  border-top-color: rgba(232,193,74,0.6);
+  transform: translateX(4px) translateY(-1px);
+  box-shadow:
+    -3px 0 18px rgba(232,193,74,0.15),
+    0 12px 40px rgba(0,0,0,0.6);
+}
+.lcard:hover::after { left: 140%; }
+
+.lbar {
+  position: absolute; left: 0; top: 16%; bottom: 16%; width: 2px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  border-radius: 0 2px 2px 0;
+  opacity: 0; transition: opacity .22s;
+}
+.lcard:hover .lbar { opacity: 1; }
+
+.post-date {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.5rem; color: var(--gold);
+  margin-bottom: 2px;
+  text-transform: uppercase;
+}
+.lbody { flex: 1; min-width: 0; position: relative; z-index: 1; }
+.lt {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.68rem; font-weight: 700;
+  color: var(--w1); letter-spacing: .07em;
+  transition: color .2s; margin-bottom: 2px;
+}
+.ls {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.56rem; color: var(--w2); 
+  letter-spacing: .06em;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.larrow {
+  font-size: .68rem; color: var(--w3); flex-shrink: 0;
+  position: relative; z-index: 1;
+  transition: transform .2s, color .2s;
+}
+.lcard:hover .larrow { transform: translateX(3px); color: var(--w2); }
+
+.no-posts {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.6rem; color: var(--w3); text-align: center;
+  padding: 24px 0;
+}
+
+.hfooter {
+  opacity: 0; animation: fup .5s .55s forwards;
+  text-align: center; margin-top: auto; padding-top: 10px;
+}
+.hfooter p {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.5rem; color: var(--w4); letter-spacing: .12em;
+}
+.hfooter span { color: rgba(232,193,74,.4); }
+
+/* ── KEYFRAMES ── */
+@keyframes fdn { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fup { from{opacity:0;transform:translateY(12px)}  to{opacity:1;transform:translateY(0)} }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="wrap">
+
+  <!-- BACK TO HUB -->
+  <div class="back-btn-row">
+    <a href="/" class="back-home">← Hub</a>
+  </div>
+
+  <!-- LOGO -->
+  <div class="logo-wrap">
+    <div class="spin-ring r1"></div>
+    <div class="spin-ring r2"></div>
+    <div class="logo-circle">
+      <img src="/Logo.png" alt="Colosyn Logo">
+    </div>
+  </div>
+
+  <!-- NAME -->
+  <div class="id-name">COLOS<em>YN</em></div>
+  <div class="id-title">Devlogs &nbsp;·&nbsp; Tech Art &nbsp;·&nbsp; Tutorials</div>
+
+  <!-- DIVIDER -->
+  <div class="divider">
+    <span class="dl"></span><span class="ds">◆</span><span class="dl"></span>
+  </div>
+
+  <!-- POSTS LIST -->
+  <div class="posts-list">
+    {% for post in collections.post | reverse %}
+      <a href="{{ post.url }}" class="lcard">
+        <div class="lbar"></div>
+        <div class="lbody">
+          <div class="post-date">{{ post.date | date: "%b %d, %Y" }}</div>
+          <div class="lt">{{ post.data.title | uppercase }}</div>
+          <div class="ls">{{ post.data.summary }}</div>
+        </div>
+        <span class="larrow">→</span>
+      </a>
+    {% else %}
+      <div class="no-posts">◆ NO LOGS DETECTED ON TERMINAL ◆</div>
+    {% endfor %}
+  </div>
+
+  <!-- FOOTER -->
+  <div class="hfooter"><p>© 2026 <span>COLOSYN</span> &nbsp;·&nbsp; built with precision</p></div>
+
+</div>
+
+<!-- Canvas background terms script (Identical to main hub) -->
+<script>
+const canvas = document.getElementById('bg-canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+
+function resize() { 
+  W = innerWidth; 
+  H = innerHeight; 
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = W * dpr; 
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+  initTerms(); 
+}
+
+window.addEventListener('resize', resize);
+
+const TERMS = [
+  'texel density', 'draw call', 'LOD', 'normal map',
+  'ambient occlusion', 'trim sheet', 'nanite', 'albedo',
+  'mip map', 'UV unwrap',
+];
+
+let terms = [];
+function initTerms() {
+  terms = TERMS.map(t => ({
+    text: t,
+    x:    Math.random() * W,
+    y:    Math.random() * H,
+    vx:   (Math.random() - .5) * .18,
+    vy:   (Math.random() - .5) * .14,
+    size: Math.random() * 6 + 12,
+    a:    Math.random() * .10 + .10,
+    va:   (Math.random() - .5) * .0003,
+    gold: Math.random() > .72,
+  }));
+}
+
+function drawTerms() {
+  ctx.clearRect(0, 0, W, H);
+  terms.forEach(t => {
+    t.x += t.vx; t.y += t.vy;
+    if (t.x < -120) t.x = W + 80;
+    if (t.x > W + 120) t.x = -80;
+    if (t.y < -20)  t.y = H + 20;
+    if (t.y > H + 20) t.y = -20;
+    
+    t.a = Math.max(.10, Math.min(.20, t.a + t.va));
+    if (t.a <= .10 || t.a >= .20) t.va *= -1;
+    
+    ctx.font = `${t.size}px 'Share Tech Mono', monospace`;
+    ctx.shadowColor   = t.gold ? `rgba(232,193,74,${t.a * 1.8})` : `rgba(255,255,255,${t.a})`;
+    ctx.shadowBlur    = 18;
+    ctx.fillStyle     = t.gold ? `rgba(232,193,74,${t.a})` : `rgba(255,255,255,${t.a * .75})`;
+    ctx.fillText(t.text, t.x, t.y);
+    ctx.shadowBlur = 0;
+  });
+  
+  drawGraphics();
+}
+
+// ── UV GRID ──
+const uv = { x:0, y:0, w:110, h:88, rot:-0.18, vr:.00030, vx:.05, vy:.035 };
+function initUV() { uv.x = W*.12; uv.y = H*.22; }
+
+function drawUV() {
+  ctx.save();
+  ctx.translate(uv.x, uv.y);
+  ctx.rotate(uv.rot);
+  ctx.strokeStyle = 'rgba(232,193,74,0.18)'; ctx.lineWidth = .8;
+  ctx.strokeRect(-uv.w/2, -uv.h/2, uv.w, uv.h);
+  ctx.lineWidth = .4; ctx.strokeStyle = 'rgba(232,193,74,0.09)';
+  for (let i=1;i<6;i++) { const x=-uv.w/2+i*(uv.w/6); ctx.beginPath(); ctx.moveTo(x,-uv.h/2); ctx.lineTo(x,uv.h/2); ctx.stroke(); }
+  for (let j=1;j<5;j++) { const y=-uv.h/2+j*(uv.h/5); ctx.beginPath(); ctx.moveTo(-uv.w/2,y); ctx.lineTo(uv.w/2,y); ctx.stroke(); }
+  ctx.setLineDash([3,4]); ctx.strokeStyle='rgba(232,193,74,0.13)'; ctx.lineWidth=.4;
+  ctx.beginPath(); ctx.moveTo(-uv.w/2,-uv.h/2); ctx.lineTo(uv.w/2,uv.h/2); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='rgba(232,193,74,0.22)'; ctx.font='7px Share Tech Mono,monospace';
+  ctx.fillText('UV',-uv.w/2+3,-uv.h/2+9);
+  ctx.restore();
+  uv.rot+=uv.vr; uv.x+=uv.vx; uv.y+=uv.vy;
+  if (uv.x<-160) uv.x=W+120; if (uv.x>W+160) uv.x=-120;
+  if (uv.y<-120) uv.y=H+100; if (uv.y>H+120) uv.y=-100;
+}
+
+// ── TOPOLOGY MESH ──
+const topo = { x:0, y:0, vx:.06, vy:-.04, rot:.1, vr:.002 };
+function initTopo() { topo.x=W*.85; topo.y=H*.25; }
+const topoPts = [
+  [0,0],[55,10],[48,55],[20,70],[-20,60],[-48,35],[-50,-10],[-20,-50],[25,-48],[52,-20]
+];
+const topoEdges = [[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,1],[1,9]];
+
+function drawTopo() {
+  ctx.save();
+  ctx.translate(topo.x, topo.y);
+  ctx.rotate(topo.rot);
+  ctx.strokeStyle='rgba(232,193,74,0.18)'; ctx.lineWidth=.6;
+  topoEdges.forEach(([a,b]) => {
+    ctx.beginPath(); ctx.moveTo(topoPts[a][0],topoPts[a][1]); ctx.lineTo(topoPts[b][0],topoPts[b][1]); ctx.stroke();
+  });
+  ctx.fillStyle='rgba(232,193,74,0.35)';
+  topoPts.forEach(([x,y]) => { ctx.beginPath(); ctx.arc(x,y,1.4,0,Math.PI*2); ctx.fill(); });
+  ctx.fillStyle='rgba(232,193,74,0.20)'; ctx.font='7px Share Tech Mono,monospace';
+  ctx.fillText('TOPO',-14,82);
+  ctx.restore();
+  topo.rot+=topo.vr; topo.x+=topo.vx; topo.y+=topo.vy;
+  if (topo.x<-100) topo.x=W+80; if (topo.x>W+100) topo.x=-80;
+  if (topo.y<-100) topo.y=H+80; if (topo.y>H+100) topo.y=-80;
+}
+
+// ── CONTOUR LINES ──
+const contour = { x:0, y:0, vx:-.05, vy:.03, rot:.25, vr:.0018 };
+function initContour() { contour.x=W*.15; contour.y=H*.75; }
+const cShape = [[0,.0],[.25,-.28],[.5,-.38],[.75,-.22],[1,.0],[.85,.28],[.6,.42],[.3,.38],[.05,.2]];
+
+function drawContour() {
+  ctx.save();
+  ctx.translate(contour.x, contour.y);
+  ctx.rotate(contour.rot);
+  const W2=90;
+  for (let lv=0;lv<5;lv++) {
+    const off=lv*13, a=0.18-lv*.025;
+    ctx.beginPath();
+    cShape.forEach(([nx,ny],i) => {
+      const px=(nx-.5)*W2, py=ny*70+off;
+      i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+    });
+    ctx.strokeStyle=`rgba(232,193,74,${a})`; ctx.lineWidth=.7; ctx.stroke();
+  }
+  ctx.fillStyle='rgba(232,193,74,0.20)'; ctx.font='7px Share Tech Mono,monospace';
+  ctx.fillText('CONTOUR',-20,90);
+  ctx.restore();
+  contour.rot+=contour.vr; contour.x+=contour.vx; contour.y+=contour.vy;
+  if (contour.x<-130) contour.x=W+100; if (contour.x>W+130) contour.x=-100;
+  if (contour.y<-120) contour.y=H+100; if (contour.y>H+120) contour.y=-100;
+}
+
+function drawGraphics() {
+  drawUV();
+  drawTopo();
+  drawContour();
+  requestAnimationFrame(drawTerms);
+}
+
+resize();
+initUV(); initTopo(); initContour();
+drawTerms();
+</script>
+
+</body>
+</html>
