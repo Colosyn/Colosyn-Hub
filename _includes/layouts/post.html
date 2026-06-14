@@ -527,7 +527,7 @@ pre[class*="language-"]:hover .copy-code-btn {
           <a href="{{ otherPost.url }}" class="read-next-card">
             <div class="lbar"></div>
             <div class="read-next-img">
-              <img src="{{ otherPost.data.image | default('/Logo.png') }}" alt="{{ otherPost.data.title }}">
+              <img src="{{ otherPost.data.image | default: '/Logo.png' }}" alt="{{ otherPost.data.title }}">
             </div>
             <div class="read-next-body">
               <span class="read-next-date">{{ otherPost.date | date: "%b %d, %Y" }}</span>

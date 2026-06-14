@@ -358,7 +358,7 @@ html, body {
         
         <!-- Post Thumbnail Image -->
         <div class="card-img-wrap">
-          <img src="{{ post.data.image | default('/Logo.png') }}" alt="{{ post.data.title }}">
+          <img src="{{ post.data.image | default: '/Logo.png' }}" alt="{{ post.data.title }}">
         </div>
         
         <!-- Post Content Details -->
