@@ -207,6 +207,7 @@ html, body {
 
 /* Code Syntax & Pre formatting */
 .post-content pre {
+  position: relative;
   margin: 24px 0;
   border-radius: 8px !important;
   background: rgba(10, 10, 10, 0.7) !important;
@@ -228,9 +229,6 @@ html, body {
 }
 
 /* ── COPY CODE BUTTON ── */
-pre[class*="language-"] {
-  position: relative;
-}
 .copy-code-btn {
   position: absolute;
   top: 8px;
@@ -249,7 +247,7 @@ pre[class*="language-"] {
   transition: opacity 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
   z-index: 5;
 }
-pre[class*="language-"]:hover .copy-code-btn {
+.post-content pre:hover .copy-code-btn {
   opacity: 1;
 }
 .copy-code-btn:hover {
@@ -650,7 +648,7 @@ lightbox.addEventListener('click', () => {
 });
 
 // ── COPY CODE BUTTONS ──
-const preBlocks = document.querySelectorAll('pre[class*="language-"]');
+const preBlocks = document.querySelectorAll('.post-content pre');
 preBlocks.forEach(pre => {
   const btn = document.createElement('button');
   btn.className = 'copy-code-btn';
