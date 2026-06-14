@@ -53,7 +53,7 @@ html, body {
   gap: 24px;
 }
 
-/* ── HEADER / BACK BUTTON ── */
+/* ── HEADER / LOGO ── */
 .header-row {
   display: flex;
   justify-content: space-between;
@@ -85,6 +85,10 @@ html, body {
 
 .logo-link {
   display: flex; align-items: center; gap: 10px;
+  transition: transform 0.2s;
+}
+.logo-link:hover {
+  transform: scale(1.02);
 }
 .logo-img {
   width: 32px; height: 32px; border-radius: 50%;
@@ -138,7 +142,7 @@ html, body {
   .post-title { font-size: 1.4rem; }
 }
 
-/* ── MARKDOWN TYPOGRAPHY STYLING ── */
+/* ── TYPOGRAPHY ── */
 .post-content {
   font-size: 1.05rem;
   line-height: 1.7;
@@ -198,6 +202,7 @@ html, body {
   border-radius: 8px;
   border: 1px solid rgba(255,255,255,0.1);
   box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  cursor: zoom-in;
 }
 
 /* Code Syntax & Pre formatting */
@@ -222,10 +227,253 @@ html, body {
   color: inherit;
 }
 
+/* ── COPY CODE BUTTON ── */
+pre[class*="language-"] {
+  position: relative;
+}
+.copy-code-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--w3);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
+  z-index: 5;
+}
+pre[class*="language-"]:hover .copy-code-btn {
+  opacity: 1;
+}
+.copy-code-btn:hover {
+  background: rgba(232, 193, 74, 0.12);
+  color: var(--gold);
+  border-color: rgba(232, 193, 74, 0.3);
+}
+.copy-code-btn.copied {
+  color: var(--green);
+  border-color: rgba(76, 255, 114, 0.3);
+  background: rgba(76, 255, 114, 0.08);
+  opacity: 1;
+}
+
+/* ── BEFORE / AFTER SLIDER ── */
+.comparison-slider {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  margin: 28px 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+@media (max-width: 600px) {
+  .comparison-slider { height: 240px; }
+}
+.slider-img {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+}
+.slider-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+.img-after {
+  width: 50%;
+  overflow: hidden;
+  z-index: 2;
+  border-right: 1px solid rgba(255,255,255,0.15);
+}
+.img-after img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.slider-handle {
+  position: absolute;
+  top: 0; bottom: 0; width: 3px;
+  background: var(--gold);
+  box-shadow: 0 0 10px rgba(232,193,74,0.8);
+  left: 50%;
+  z-index: 3;
+  cursor: ew-resize;
+}
+.slider-handle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  background: var(--bg);
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(232,193,74,0.5);
+}
+.slider-handle::after {
+  content: '◀ ▶';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 8px;
+  color: var(--gold);
+  font-family: monospace;
+  font-weight: bold;
+}
+
+/* ── LIGHTBOX ZOOM OVERLAY ── */
+.lightbox-modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: zoom-out;
+  padding: 20px;
+}
+.lightbox-modal.open {
+  display: flex;
+  opacity: 1;
+}
+.lightbox-content {
+  max-width: 92%;
+  max-height: 92%;
+  object-fit: contain;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  transform: scale(0.95);
+  transition: transform 0.3s ease;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+}
+.lightbox-modal.open .lightbox-content {
+  transform: scale(1);
+}
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.lightbox-close:hover {
+  color: var(--gold);
+}
+
+/* ── RELATED LOGS (READ NEXT) ── */
+.read-next-section {
+  margin-top: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 30px;
+  opacity: 0; animation: fup .5s .2s forwards;
+}
+.read-next-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 900;
+  color: var(--gold);
+  letter-spacing: 0.14em;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.read-next-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+.read-next-card {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.08);
+  border-top: 1px solid rgba(255,255,255,0.18);
+  border-left: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  gap: 14px;
+  transition: all 0.22s ease;
+  overflow: hidden;
+  position: relative;
+}
+.read-next-card:hover {
+  background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04));
+  border-color: rgba(232,193,74,0.3);
+  border-top-color: rgba(232,193,74,0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+.read-next-card .lbar {
+  position: absolute; left: 0; top: 16%; bottom: 16%; width: 2px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  border-radius: 0 2px 2px 0;
+  opacity: 0; transition: opacity .22s;
+}
+.read-next-card:hover .lbar { opacity: 1; }
+
+.read-next-img {
+  width: 54px;
+  height: 54px;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.read-next-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.read-next-body {
+  flex: 1;
+  min-width: 0;
+}
+.read-next-date {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.5rem;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  display: block;
+}
+.read-next-card-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--w1);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
 /* ── FOOTER ── */
 .hfooter {
   opacity: 0; animation: fup .5s .2s forwards;
-  text-align: center; margin-top: 20px;
+  text-align: center; margin-top: 30px;
 }
 .hfooter p {
   font-family: 'Share Tech Mono', monospace;
@@ -269,12 +517,41 @@ html, body {
     </div>
   </article>
 
+  <!-- RELATED LOGS (READ NEXT) -->
+  <div class="read-next-section">
+    <h2 class="read-next-title">◆ SYSTEM RECENT LOGS ◆</h2>
+    <div class="read-next-grid">
+      {% assign count = 0 %}
+      {% for otherPost in collections.post | reverse %}
+        {% if otherPost.url != page.url and count < 2 %}
+          <a href="{{ otherPost.url }}" class="read-next-card">
+            <div class="lbar"></div>
+            <div class="read-next-img">
+              <img src="{{ otherPost.data.image | default('/Logo.png') }}" alt="{{ otherPost.data.title }}">
+            </div>
+            <div class="read-next-body">
+              <span class="read-next-date">{{ otherPost.date | date: "%b %d, %Y" }}</span>
+              <h4 class="read-next-card-title">{{ otherPost.data.title | upcase }}</h4>
+            </div>
+          </a>
+          {% assign count = count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <div class="hfooter"><p>© 2026 <span>COLOSYN</span> &nbsp;·&nbsp; built with precision</p></div>
 
 </div>
 
-<!-- Canvas background terms script (Identical to main hub) -->
+<!-- LIGHTBOX MODAL -->
+<div id="lightbox" class="lightbox-modal">
+  <span class="lightbox-close">&times;</span>
+  <img id="lightbox-img" class="lightbox-content" src="" alt="Zoomed view">
+</div>
+
+<!-- Canvas background terms script -->
 <script>
 const canvas = document.getElementById('bg-canvas');
 const ctx    = canvas.getContext('2d');
@@ -425,6 +702,89 @@ function drawGraphics() {
 resize();
 initUV(); initTopo(); initContour();
 drawTerms();
+
+// ── CLIENT-SIDE INTERACTIVE LIGHTBOX ZOOM ──
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+const postImgs = document.querySelectorAll('.post-content img:not(.slider-img img)');
+
+postImgs.forEach(img => {
+  img.addEventListener('click', () => {
+    lightboxImg.src = img.src;
+    lightbox.classList.add('open');
+  });
+});
+
+lightbox.addEventListener('click', () => {
+  lightbox.classList.remove('open');
+});
+
+// ── COPY CODE BUTTONS ──
+const preBlocks = document.querySelectorAll('pre[class*="language-"]');
+preBlocks.forEach(pre => {
+  const btn = document.createElement('button');
+  btn.className = 'copy-code-btn';
+  btn.innerText = 'Copy';
+  pre.appendChild(btn);
+  
+  btn.addEventListener('click', () => {
+    const code = pre.querySelector('code') ? pre.querySelector('code').innerText : pre.innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      btn.innerText = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.innerText = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+});
+
+// ── BEFORE/AFTER IMAGE SLIDER ──
+const sliders = document.querySelectorAll('.comparison-slider');
+
+sliders.forEach(slider => {
+  const afterImg = slider.querySelector('.img-after img');
+  const afterContainer = slider.querySelector('.img-after');
+  const handle = slider.querySelector('.slider-handle');
+  
+  function updateWidths() {
+    const sliderWidth = slider.offsetWidth;
+    if (afterImg) afterImg.style.width = sliderWidth + 'px';
+  }
+  
+  updateWidths();
+  window.addEventListener('resize', updateWidths);
+  
+  let isDragging = false;
+  
+  function slide(x) {
+    const rect = slider.getBoundingClientRect();
+    let position = ((x - rect.left) / rect.width) * 100;
+    
+    if (position < 0) position = 0;
+    if (position > 100) position = 100;
+    
+    afterContainer.style.width = position + '%';
+    handle.style.left = position + '%';
+  }
+  
+  handle.addEventListener('mousedown', () => { isDragging = true; });
+  window.addEventListener('mouseup', () => { isDragging = false; });
+  
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    slide(e.clientX);
+  });
+  
+  // Touch support for mobile devices
+  handle.addEventListener('touchstart', () => { isDragging = true; });
+  window.addEventListener('touchend', () => { isDragging = false; });
+  window.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    slide(e.touches[0].clientX);
+  });
+});
 </script>
 
 <!-- Prism Core & Autoloader for Syntax Highlighting -->

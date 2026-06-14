@@ -528,12 +528,12 @@ html, body {
 
   <!-- TABS -->
   <div class="tabs">
-    <button class="tab-btn active" data-tab="marketplace">🛒 &nbsp;Marketplace</button>
-    <button class="tab-btn" data-tab="portfolio">🎨 &nbsp;Portfolio</button>
+    <button class="tab-btn" data-tab="marketplace">🛒 &nbsp;Marketplace</button>
+    <button class="tab-btn active" data-tab="portfolio">🎨 &nbsp;Portfolio</button>
   </div>
 
   <!-- MARKETPLACE -->
-  <div class="panel" id="panel-marketplace">
+  <div class="panel hidden" id="panel-marketplace">
 
     <!-- GUMROAD CARD -->
     <div class="lcard has-cta open" onclick="toggleCard(this, event)">
@@ -595,7 +595,7 @@ html, body {
   </div>
 
   <!-- PORTFOLIO -->
-  <div class="panel hidden" id="panel-portfolio">
+  <div class="panel" id="panel-portfolio">
     <a href="https://colosyn.artstation.com" target="_blank" class="lcard">
       <div class="lbar"></div>
         <div class="licon"><svg viewBox="0 0 24 24"><path d="M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.164-1.333h-1.336l9.229 15.992 1.173 2.033c.205-.428.37-.874.37-1.342zm-14.104-4.357L6.41 6.856l-7.523 13.035h6.204z"/></svg></div>
@@ -813,7 +813,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     });
   });
 });
-document.getElementById('panel-marketplace').style.opacity = '1';
+document.getElementById('panel-portfolio').style.opacity = '1';
 </script>
 </body>
 </html>

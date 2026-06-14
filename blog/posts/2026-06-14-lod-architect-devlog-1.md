@@ -2,6 +2,7 @@
 layout: layouts/post.html
 title: "LOD Architect Devlog #1: Geometry Nodes"
 date: 2026-06-14
+image: "/Logo.png"
 summary: "An in-depth look at building a procedural Level of Detail tool inside Blender using Geometry Nodes and Python."
 tags: post
 ---
@@ -29,9 +30,17 @@ Here is the general layout of how the Geometry Nodes modifier processes the inpu
 * **Stage 2 (Decimation):** Reduces polycount using edge-collapse algorithms.
 * **Stage 3 (UV Transfer):** Re-projects UV islands from the original high-poly source.
 
-Below is a demonstration of the decimation algorithm running inside Blender:
+Below is a demonstration of the decimation algorithm running inside Blender (drag the slider left and right to compare):
 
-![LOD Architect in Action](/blog/images/lod_demo.gif)
+<div class="comparison-slider">
+  <div class="slider-img img-before">
+    <img src="/Logo.png" alt="LOD0 - High Poly">
+  </div>
+  <div class="slider-img img-after" style="width: 50%;">
+    <img src="/Logo.png" alt="LOD2 - Low Poly (Grayscale)" style="filter: grayscale(100%);">
+  </div>
+  <div class="slider-handle" style="left: 50%;"></div>
+</div>
 
 > Note: If you want to use the tool in Unreal Engine or Unity, make sure to export all generated LOD levels inside a single `.fbx` container.
 
