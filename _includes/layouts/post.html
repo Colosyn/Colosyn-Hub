@@ -284,11 +284,16 @@ pre[class*="language-"]:hover .copy-code-btn {
   top: 0; left: 0; width: 100%; height: 100%;
 }
 .slider-img img {
-  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
   object-fit: cover;
   display: block;
   pointer-events: none;
+}
+.img-before img {
+  width: 100%;
 }
 .img-after {
   width: 50%;
@@ -297,9 +302,8 @@ pre[class*="language-"]:hover .copy-code-btn {
   border-right: 1px solid rgba(255,255,255,0.15);
 }
 .img-after img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: var(--slider-width, 100%);
+  max-width: none;
 }
 .slider-handle {
   position: absolute;
@@ -706,9 +710,10 @@ drawTerms();
 // ── CLIENT-SIDE INTERACTIVE LIGHTBOX ZOOM ──
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightbox-img');
-const postImgs = document.querySelectorAll('.post-content img:not(.slider-img img)');
+const postImgs = document.querySelectorAll('.post-content img');
 
 postImgs.forEach(img => {
+  if (img.closest('.comparison-slider')) return; // Skip slider images
   img.addEventListener('click', () => {
     lightboxImg.src = img.src;
     lightbox.classList.add('open');
@@ -744,13 +749,12 @@ preBlocks.forEach(pre => {
 const sliders = document.querySelectorAll('.comparison-slider');
 
 sliders.forEach(slider => {
-  const afterImg = slider.querySelector('.img-after img');
   const afterContainer = slider.querySelector('.img-after');
   const handle = slider.querySelector('.slider-handle');
   
   function updateWidths() {
     const sliderWidth = slider.offsetWidth;
-    if (afterImg) afterImg.style.width = sliderWidth + 'px';
+    slider.style.setProperty('--slider-width', sliderWidth + 'px');
   }
   
   updateWidths();
@@ -760,6 +764,8 @@ sliders.forEach(slider => {
   
   function slide(x) {
     const rect = slider.getBoundingClientRect();
+    slider.style.setProperty('--slider-width', rect.width + 'px');
+    
     let position = ((x - rect.left) / rect.width) * 100;
     
     if (position < 0) position = 0;
