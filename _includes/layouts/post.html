@@ -264,80 +264,6 @@ pre[class*="language-"]:hover .copy-code-btn {
   opacity: 1;
 }
 
-/* ── BEFORE / AFTER SLIDER ── */
-.comparison-slider {
-  position: relative;
-  width: 100%;
-  height: 380px;
-  overflow: hidden;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.1);
-  margin: 28px 0;
-  user-select: none;
-  -webkit-user-select: none;
-}
-@media (max-width: 600px) {
-  .comparison-slider { height: 240px; }
-}
-.slider-img {
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
-}
-.slider-img img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  pointer-events: none;
-}
-.img-before {
-  z-index: 1;
-}
-.img-after {
-  width: 100%;
-  z-index: 2;
-  clip-path: inset(0 50% 0 0);
-}
-.img-after img {
-  width: 100%;
-  max-width: none;
-}
-.slider-handle {
-  position: absolute;
-  top: 0; bottom: 0; width: 3px;
-  background: var(--gold);
-  box-shadow: 0 0 10px rgba(232,193,74,0.8);
-  left: 50%;
-  z-index: 3;
-  cursor: ew-resize;
-}
-.slider-handle::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 32px;
-  height: 32px;
-  background: var(--bg);
-  border: 2px solid var(--gold);
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(232,193,74,0.5);
-}
-.slider-handle::after {
-  content: '◀ ▶';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 8px;
-  color: var(--gold);
-  font-family: monospace;
-  font-weight: bold;
-}
 
 /* ── LIGHTBOX ZOOM OVERLAY ── */
 .lightbox-modal {
@@ -713,7 +639,6 @@ const lightboxImg = document.getElementById('lightbox-img');
 const postImgs = document.querySelectorAll('.post-content img');
 
 postImgs.forEach(img => {
-  if (img.closest('.comparison-slider')) return; // Skip slider images
   img.addEventListener('click', () => {
     lightboxImg.src = img.src;
     lightbox.classList.add('open');
@@ -745,48 +670,7 @@ preBlocks.forEach(pre => {
   });
 });
 
-// ── BEFORE/AFTER IMAGE SLIDER ──
-const sliders = document.querySelectorAll('.comparison-slider');
-
-sliders.forEach(slider => {
-  const afterContainer = slider.querySelector('.img-after');
-  const handle = slider.querySelector('.slider-handle');
-  
-  if (afterContainer) {
-    afterContainer.style.clipPath = 'inset(0 50% 0 0)';
-  }
-  
-  let isDragging = false;
-  
-  function slide(x) {
-    const rect = slider.getBoundingClientRect();
-    let position = ((x - rect.left) / rect.width) * 100;
-    
-    if (position < 0) position = 0;
-    if (position > 100) position = 100;
-    
-    if (afterContainer) {
-      afterContainer.style.clipPath = `inset(0 ${100 - position}% 0 0)`;
-    }
-    handle.style.left = position + '%';
-  }
-  
-  handle.addEventListener('mousedown', () => { isDragging = true; });
-  window.addEventListener('mouseup', () => { isDragging = false; });
-  
-  window.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    slide(e.clientX);
-  });
-  
-  // Touch support for mobile devices
-  handle.addEventListener('touchstart', () => { isDragging = true; });
-  window.addEventListener('touchend', () => { isDragging = false; });
-  window.addEventListener('touchmove', (e) => {
-    if (!isDragging) return;
-    slide(e.touches[0].clientX);
-  });
-});
+// Before/After comparison slider removed
 </script>
 
 <!-- Prism Core & Autoloader for Syntax Highlighting -->
